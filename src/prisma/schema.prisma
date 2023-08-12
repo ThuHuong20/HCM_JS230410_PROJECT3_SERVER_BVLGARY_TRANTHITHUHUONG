@@ -1,0 +1,107 @@
+datasource db {
+    provider = "mysql"
+    url      = env("PRM_DB_URL")
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+enum Role {
+    USER
+    ADMIN
+}
+
+model users {
+    id            Int        @id @unique @default(autoincrement())
+    email         String     @unique @db.Char(100)
+    email_confirm Boolean    @default(false)
+    user_name     String     @unique @db.Char(30)
+    first_name    String     @db.Char(30)
+    last_name     String     @db.Char(30)
+    password      String     @db.Char(255)
+    blocked       Boolean    @default(false)
+    avatar        String     @default("no_avatar.jpg")
+    role          Role       @default(USER)
+    create_at     DateTime   @default(now())
+    update_at     DateTime   @default(now())
+    carts         carts[]
+    receipts      receipts[]
+}
+
+model categories {
+    id       Int        @id @default(autoincrement())
+    title    String     @unique
+    status   Boolean    @default(false)
+    avatar   String     @default("category.jpg")
+    deleted  Boolean    @default(false)
+    products products[]
+}
+
+model products {
+    id               Int                @id @default(autoincrement())
+    name             String             @unique(map: "Products_name_key")
+    active           Boolean            @default(false)
+    des              String
+    avatar           String
+    price            Float
+    category         categories         @relation(fields: [category_id], references: [id])
+    category_id      Int
+    cart_details     cart_details[]
+    product_pictures product_pictures[]
+    receipt_details  receipt_details[]
+}
+
+model product_pictures {
+    id         Int      @id @default(autoincrement())
+    product    products @relation(fields: [product_id], references: [id])
+    product_id Int
+    url        String
+}
+
+model carts {
+    id           String         @id @default(uuid())
+    user         users          @relation(fields: [user_id], references: [id])
+    user_id      Int            @unique
+    cart_details cart_details[]
+}
+
+model cart_details {
+    id         Int      @id @default(autoincrement())
+    cart       carts    @relation(fields: [cart_id], references: [id])
+    cart_id    String
+    product    products @relation(fields: [product_id], references: [id])
+    product_id Int
+    quantity   Int
+    note       String?
+}
+
+enum PayMode {
+    CASH
+    ZALO
+    MOMO
+}
+
+model receipts {
+    id              Int               @id @default(autoincrement())
+    receipt_code    String
+    total           Float
+    paid            Boolean
+    pay_mode        PayMode
+    paid_time       DateTime?
+    create_at       DateTime          @default(now())
+    update_at       DateTime          @default(now())
+    receipt_details receipt_details[]
+    user            users             @relation(fields: [user_id], references: [id])
+    user_id         Int
+}
+
+model receipt_details {
+    id         Int      @id @default(autoincrement())
+    receipt    receipts @relation(fields: [receipt_id], references: [id])
+    receipt_id Int
+    product    products @relation(fields: [product_id], references: [id])
+    product_id Int
+    quantity   Int
+    note       String?
+}
