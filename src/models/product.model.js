@@ -3,15 +3,16 @@ const prisma = new PrismaClient()
 
 export default {
     findById: async function (id) {
+        console.log("id nekk", id)
         try {
-            let products = await prisma.products.findUnique({
+            let product = await prisma.products.findUnique({
                 where: {
                     id: id
                 }
             });
             return {
                 message: "Get products success!",
-                data: products
+                data: product
             }
         } catch (err) {
             return {

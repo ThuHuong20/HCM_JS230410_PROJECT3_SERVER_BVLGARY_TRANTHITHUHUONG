@@ -3,6 +3,7 @@ import { uploadFileToStorage } from '../meobase';
 import fs from 'fs';
 export default {
     findById: async function (req, res) {
+        console.log("đã vào đây nekk")
         try {
             let result = await productModel.findById(parseInt(req.params.id));
             return res.status(200).json({
@@ -56,6 +57,6 @@ export default {
             })
         }
     }
-    
+
 }
 
