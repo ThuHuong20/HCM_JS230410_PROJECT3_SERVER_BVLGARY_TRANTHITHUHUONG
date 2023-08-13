@@ -73,7 +73,7 @@ export default {
                 merchantinfo: "ThuHuongStore" // key require merchantinfo
             }),
             amount: Number(req.body.receiptTotal),
-            description: "Thanh Toán Cho Shop Hương",
+            description: "Payment for Shop Bvlgari",
             bankcode: "zalopayapp",
         };
 

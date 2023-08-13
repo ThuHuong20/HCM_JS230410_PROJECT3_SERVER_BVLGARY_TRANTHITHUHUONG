@@ -22,5 +22,7 @@ router.get("/:id", productController.findById);
 //search
 router.get("/", productController.findMany);
 
+//update 
 
+router.patch("/:productId", productUpload.single('avatar'), productController.update);
 export default router;
